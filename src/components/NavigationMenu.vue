@@ -1,39 +1,40 @@
 <template>
-
-    <div class="col-2 fixed-top d-flex justify-content-center"
-         style="height: 100vh; top: 70px;">
-        <ul class="nav flex-column align-items-center text-center w-100">
-            <li class="nav-item w-100">
-                <RouterLink class="nav-link"
-                            to="/">Home</RouterLink>
-            </li>
-            <li class="nav-item w-100">
-                <RouterLink class="nav-link"
-                            to="/about">About</RouterLink>
-            </li>
-            <li class="nav-item w-100">
-                <a class="nav-link"
-                   href="#">Link</a>
-            </li>
-            <li class="nav-item w-100">
-                <RouterLink class="nav-link"
-                            to="/products">Products</RouterLink>
-            </li>
-        </ul>
+    <div class="fixed-top d-flex justify-content-center nav-menu ">
+        <nav class="w-100">
+            <ul class="nav flex-column align-items-center text-center">
+                <li class="w-100">
+                    <RouterLink class="nav-link"
+                                to="/">Home</RouterLink>
+                </li>
+                <li class=" w-100">
+                    <RouterLink class="nav-link"
+                                to="/order">Order</RouterLink>
+                </li>
+                <li class="w-100">
+                    <a class="nav-link"
+                       href="#">Link</a>
+                </li>
+                <li class="w-100">
+                    <RouterLink class="nav-link"
+                                to="/products">Products</RouterLink>
+                </li>
+            </ul>
+        </nav>
     </div>
-
-
 </template>
 
 <script>
-export default {
-    name: "NavigationMenu",
-};
+
 </script>
 
 <style scoped>
-.sidebar {
+.nav-menu {
+    top: 56px;
+    width: 200px;
     height: 100vh;
+    background: #eff3f6;
+    box-shadow: 0.5rem 0 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1000;
 }
 
 .nav-link {

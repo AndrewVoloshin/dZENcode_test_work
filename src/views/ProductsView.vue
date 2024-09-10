@@ -1,13 +1,11 @@
 <template>
-
+<div> here prod3333</div>
 
 
 </template>
 
 <script>
-export default {
-    name: "NavigationMenu",
-};
+
 </script>
 
 <style scoped></style>
