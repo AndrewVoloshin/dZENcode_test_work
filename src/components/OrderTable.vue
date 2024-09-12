@@ -8,6 +8,10 @@ import { formatDate } from '@/utils/formatDate';
 const orders = ref(importedOrders);
 const products = ref(importedProducts);
 
+let bigSize = ref(true)
+let choosenOrder = ref()
+
+
 
 const orderSums = computed(() => calculateOrderSums(products.value));
 console.log(orderSums);
@@ -16,25 +20,39 @@ const orderTotalProducts = computed(() => countOrderProducts(orders.value, produ
 console.log(orderTotalProducts.value, 'orderTotalProducts');
 
 
-function deleteOrder(index: number) {
-    orders.value.splice(index, 1);
+function deleteOrder(orderId: number) {
+    orders.value.splice(orderId, 1);
 }
+
+function openModalProducts(orderId: number) {
+    bigSize.value = false
+    choosenOrder.value = orderId
+}
+
 
 </script>
 
 <template>
     <div>
-        <table class="table">
+        <table :class="['table', { 'table-small': !bigSize }]">
             <tbody>
                 <tr v-for="(order, index) in orders"
                     :key="order.id">
-                    <td>{{ order.description }}</td>
-                    <td>{{ order.title }}</td>
+                    <td v-if="bigSize">{{ order.description }}</td>
+                    <!-- <td v-if="bigSize">{{ order.title }}</td> -->
 
 
-                    <td class="icon-text-cell">
-                        <i class="fa-solid fa-rectangle-list icon-circle"></i>
-                        {{ orderTotalProducts[order.id]}} Products
+                    <td>
+                        <div class="icon-text-cell"
+                             @click="openModalProducts(order.id)">
+
+                            <i class="fa-solid fa-rectangle-list icon-circle"></i>
+                            <div>
+                                <span class="d-block "> {{ orderTotalProducts[order.id] }}
+                                </span>
+                                <span class="d-block">Products</span>
+                            </div>
+                        </div>
                     </td>
 
                     <td>
@@ -43,7 +61,7 @@ function deleteOrder(index: number) {
 
                     </td>
 
-                    <td>
+                    <td v-if="bigSize">
                         <span class="d-block text-center">
                             {{ (orderSums[order.id]?.USD ?? 'N/A') + ' $' }}
                         </span>
@@ -51,12 +69,20 @@ function deleteOrder(index: number) {
                             {{ orderSums[order.id]?.UAH + ' UAH' || 'N/A' }}
                         </span>
                     </td>
-                    <td>
+                    <td v-if="bigSize">
                         <button @click="deleteOrder(index)"
                                 class="delete-btn">
                             <i class="fa-regular fa-trash-can"
                                style="color: #636d73;"></i>
                         </button>
+                    </td>
+
+                    <td :class="[{ 'cell-chevron': order.id === choosenOrder }]"
+                        v-if="!bigSize">
+                        <div class="cell-chevron__container">
+                            <img src="/src/assets/chevron-right-solid.svg"
+                                 alt="chevron" />
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -75,12 +101,17 @@ function deleteOrder(index: number) {
     }
 }
 
+.table-small {
+    width: 410px;
+}
+
 .table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
     border-left: none;
     border-right: none;
+    vertical-align: middle;
 
     &:first-child {
         border-left: 1px solid #ddd;
@@ -110,5 +141,25 @@ function deleteOrder(index: number) {
     border-radius: 50%;
     border: 1px solid #ddd;
     color: #636d73;
+}
+
+.cell-chevron {
+    background-color: #d0d8db;
+    text-align: center;
+}
+
+.cell-chevron__container {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    margin: 0 auto;
+
+    & img {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import OrderItem from '../components/OrderItem.vue'
+import OrderTable from '../components/OrderTable.vue'
 
 </script>
 
 <template>
   <div class="order-container">
     <h2>Orders</h2>
-    <OrderItem />
+    <OrderTable />
   </div>
 </template>
 
