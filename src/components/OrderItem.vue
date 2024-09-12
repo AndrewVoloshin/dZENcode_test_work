@@ -1,25 +1,63 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { orders as importedOrders, products as importedProducts } from '@/data/data.js';
+import { calculateOrderSums, countOrderProducts } from '@/utils/orderUtils';
+import { formatDate } from '@/utils/formatDate';
 
-const people = ref([
-    { name: 'John Doe', age: 28, city: 'New York' },
-    { name: 'Jane Smith', age: 34, city: 'Los Angeles' },
-    { name: 'Bob Johnson', age: 23, city: 'Chicago' },
-    { name: 'Alice Brown', age: 41, city: 'Houston' },
-]);
+
+const orders = ref(importedOrders);
+const products = ref(importedProducts);
+
+
+const orderSums = computed(() => calculateOrderSums(products.value));
+console.log(orderSums);
+
+const orderTotalProducts = computed(() => countOrderProducts(orders.value, products.value));
+console.log(orderTotalProducts.value, 'orderTotalProducts');
+
+
+function deleteOrder(index: number) {
+    orders.value.splice(index, 1);
+}
+
 </script>
+
 <template>
-
-
-    <div class=" w-10 h-10 ">
+    <div>
         <table class="table">
             <tbody>
-                <tr v-for="(person, index) in people"
-                    :key="index">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ person.name }}</td>
-                    <td>{{ person.age }}</td>
-                    <td>{{ person.city }}</td>
+                <tr v-for="(order, index) in orders"
+                    :key="order.id">
+                    <td>{{ order.description }}</td>
+                    <td>{{ order.title }}</td>
+
+
+                    <td class="icon-text-cell">
+                        <i class="fa-solid fa-rectangle-list icon-circle"></i>
+                        {{ orderTotalProducts[order.id]}} Products
+                    </td>
+
+                    <td>
+                        <span class="d-block text-center"> {{ formatDate(order.date).part }}</span>
+                        <span class="d-block text-center">{{ formatDate(order.date).full }}</span>
+
+                    </td>
+
+                    <td>
+                        <span class="d-block text-center">
+                            {{ (orderSums[order.id]?.USD ?? 'N/A') + ' $' }}
+                        </span>
+                        <span class="d-block text-center">
+                            {{ orderSums[order.id]?.UAH + ' UAH' || 'N/A' }}
+                        </span>
+                    </td>
+                    <td>
+                        <button @click="deleteOrder(index)"
+                                class="delete-btn">
+                            <i class="fa-regular fa-trash-can"
+                               style="color: #636d73;"></i>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -55,5 +93,22 @@ const people = ref([
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
     }
+}
+
+.icon-text-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    color: #636d73;
 }
 </style>
