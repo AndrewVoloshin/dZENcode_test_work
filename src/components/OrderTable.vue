@@ -2,43 +2,34 @@
 import { ref, computed } from 'vue';
 import { orders as importedOrders, products as importedProducts } from '@/data/data.js';
 import { calculateOrderSums, countOrderProducts } from '@/utils/orderUtils';
+import { useOrderStore } from '@/stores/orderStore';
 import { formatDate } from '@/utils/formatDate';
-
 
 const orders = ref(importedOrders);
 const products = ref(importedProducts);
 
-let bigSize = ref(true)
-let choosenOrder = ref()
-
-
+const orderStore = useOrderStore();
 
 const orderSums = computed(() => calculateOrderSums(products.value));
-console.log(orderSums);
 
 const orderTotalProducts = computed(() => countOrderProducts(orders.value, products.value));
-console.log(orderTotalProducts.value, 'orderTotalProducts');
-
 
 function deleteOrder(orderId: number) {
     orders.value.splice(orderId, 1);
 }
 
 function openModalProducts(orderId: number) {
-    bigSize.value = false
-    choosenOrder.value = orderId
+    orderStore.openModalProducts(orderId);
 }
-
-
 </script>
 
 <template>
     <div>
-        <table :class="['table', { 'table-small': !bigSize }]">
+        <table :class="['table', { 'table-small': !orderStore.bigSize }]">
             <tbody>
                 <tr v-for="(order, index) in orders"
                     :key="order.id">
-                    <td v-if="bigSize">{{ order.description }}</td>
+                    <td v-if="orderStore.bigSize">{{ order.description }}</td>
                     <!-- <td v-if="bigSize">{{ order.title }}</td> -->
 
 
@@ -61,7 +52,7 @@ function openModalProducts(orderId: number) {
 
                     </td>
 
-                    <td v-if="bigSize">
+                    <td v-if="orderStore.bigSize">
                         <span class="d-block text-center">
                             {{ (orderSums[order.id]?.USD ?? 'N/A') + ' $' }}
                         </span>
@@ -69,7 +60,7 @@ function openModalProducts(orderId: number) {
                             {{ orderSums[order.id]?.UAH + ' UAH' || 'N/A' }}
                         </span>
                     </td>
-                    <td v-if="bigSize">
+                    <td v-if="orderStore.bigSize">
                         <button @click="deleteOrder(index)"
                                 class="delete-btn">
                             <i class="fa-regular fa-trash-can"
@@ -77,8 +68,8 @@ function openModalProducts(orderId: number) {
                         </button>
                     </td>
 
-                    <td :class="[{ 'cell-chevron': order.id === choosenOrder }]"
-                        v-if="!bigSize">
+                    <td :class="[{ 'cell-chevron': order.id === orderStore.choosenOrder }]"
+                        v-if="!orderStore.bigSize">
                         <div class="cell-chevron__container">
                             <img src="/src/assets/chevron-right-solid.svg"
                                  alt="chevron" />
