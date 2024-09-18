@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { orders as importedOrders, products as importedProducts } from '@/data/data.js';
 import { calculateOrderSums, countOrderProducts } from '@/utils/orderUtils';
 import { useOrderStore } from '@/stores/orderStore';
 import { formatDate } from '@/utils/formatDate';
 
-const orders = ref(importedOrders);
-const products = ref(importedProducts);
 
 const orderStore = useOrderStore();
 
-const orderSums = computed(() => calculateOrderSums(products.value));
 
-const orderTotalProducts = computed(() => countOrderProducts(orders.value, products.value));
+const orderSums = computed(() => calculateOrderSums(orderStore.products));
+
+const orderTotalProducts = computed(() => countOrderProducts(orderStore.orders, orderStore.products));
 
 function deleteOrder(orderId: number) {
-    orders.value.splice(orderId, 1);
+    orderStore.orders.splice(orderId, 1);
 }
 
 function openModalProducts(orderId: number) {
-    orderStore.openModalProducts(orderId);
+    orderStore.bigSize = false;
+    orderStore.choosenOrder = orderId;
+    orderStore.displayOrderProductTable = true;
 }
 </script>
 
@@ -27,7 +27,7 @@ function openModalProducts(orderId: number) {
     <div>
         <table :class="['table', { 'table-small': !orderStore.bigSize }]">
             <tbody>
-                <tr v-for="(order, index) in orders"
+                <tr v-for="(order, index) in orderStore.orders"
                     :key="order.id">
                     <td v-if="orderStore.bigSize">{{ order.description }}</td>
 

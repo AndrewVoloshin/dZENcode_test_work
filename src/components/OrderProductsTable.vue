@@ -1,40 +1,43 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { orders as importedOrders, products as importedProducts } from '@/data/data.js';
-import { calculateOrderSums, countOrderProducts } from '@/utils/orderUtils';
 import { useOrderStore } from '@/stores/orderStore';
-import { formatDate } from '@/utils/formatDate';
 
-const orders = ref(importedOrders);
-const products = ref(importedProducts);
+const orderStore = useOrderStore();
+
+
+const allProductOrderId = computed(() => orderStore.products.filter(product => {
+    if (product.order === orderStore.choosenOrder) return true
+}))
+
 
 </script>
 
 <template>
-    <div>
+    <div class="product"
+         v-if="orderStore.displayOrderProductTable">
+
+        <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique ducimus ratione debitis. Optio saepe
+            sapiente eaque enim mollitia tempora. Numquam!</h2>
+        <button>Add product</button>
+
         <table :class="['table']">
             <tbody>
-                <tr v-for="(order, index) in orders"
-                    :key="order.id">
-                    <td>{{ order.description }}</td>
 
+
+                <tr v-for="(product, index) in allProductOrderId"
+                    :key="product.id">
 
                     <td>
-                        <div class="d-flex align-items-center gap-2">
-
-                            <i
-                               class="fa-solid fa-rectangle-list d-flex align-items-center justify-content-center icon-circle"></i>
-                            <div>
-                                <span class="d-block "> {{}}
-                                </span>
-                                <span class="d-block">Products</span>
-                            </div>
+                        <div>
+                            {{ product.title }}
                         </div>
+                        <span>{{ product.type }} </span>
                     </td>
 
+
+
+
                     <td>
-                        <span class="d-block text-center"> {{ formatDate(order.date).part }}</span>
-                        <span class="d-block text-center">{{ formatDate(order.date).full }}</span>
 
                     </td>
 
@@ -60,15 +63,22 @@ const products = ref(importedProducts);
                         </div>
                     </td>
                 </tr>
+
+
+
             </tbody>
         </table>
     </div>
 </template>
 
 <style lang="scss" scoped>
+.product {
+    background: white;
+    border: 1px solid #ddd;
+}
+
 .table {
     width: 100%;
-    border-collapse: separate;
     border-spacing: 0 10px;
 
     tr {
@@ -81,7 +91,7 @@ const products = ref(importedProducts);
 }
 
 .table td {
-    border: 1px solid #ddd;
+    border: 1px solid #f5f4f4;
     padding: 8px;
     text-align: left;
     border-left: none;
@@ -89,17 +99,21 @@ const products = ref(importedProducts);
     vertical-align: middle;
 
     &:first-child {
-        border-left: 1px solid #ddd;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
+        border-left: none;
     }
 
     &:last-child {
-        border-right: 1px solid #ddd;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
+        border-right: none;
     }
 }
+
+
+.table td {
+    border-bottom: none;
+}
+
+
+
 
 .icon-circle {
     width: 30px;

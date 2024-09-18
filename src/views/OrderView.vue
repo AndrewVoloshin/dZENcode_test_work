@@ -2,7 +2,6 @@
 import OrderTable from '../components/OrdersTable.vue'
 import OrderProductsTable from '../components/OrderProductsTable.vue'
 
-
 </script>
 
 <template>

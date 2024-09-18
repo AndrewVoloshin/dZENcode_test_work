@@ -1,15 +1,17 @@
 // stores/orderStore.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { orders as importedOrders, products as importedProducts } from '@/data/data.js';
 
 export const useOrderStore = defineStore('order', () => {
+
+  const orders = ref(importedOrders);
+  const products = ref(importedProducts);
+  
   const bigSize = ref(true);
   const choosenOrder = ref<number | null>(null);
+  const displayOrderProductTable = ref(false);
 
-  function openModalProducts(orderId: number) {
-    bigSize.value = false;
-    choosenOrder.value = orderId;
-  }
 
   function resetModal() {
     bigSize.value = true;
@@ -17,9 +19,11 @@ export const useOrderStore = defineStore('order', () => {
   }
 
   return {
+    orders,
+    products,
     bigSize,
     choosenOrder,
-    openModalProducts,
+    displayOrderProductTable,
     resetModal,
   };
 });
