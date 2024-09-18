@@ -30,14 +30,13 @@ function openModalProducts(orderId: number) {
                 <tr v-for="(order, index) in orders"
                     :key="order.id">
                     <td v-if="orderStore.bigSize">{{ order.description }}</td>
-                    <!-- <td v-if="bigSize">{{ order.title }}</td> -->
-
 
                     <td>
-                        <div class="icon-text-cell"
+                        <div class="d-flex align-items-center gap-2"
                              @click="openModalProducts(order.id)">
 
-                            <i class="fa-solid fa-rectangle-list icon-circle"></i>
+                            <i
+                               class="fa-solid fa-rectangle-list d-flex align-items-center justify-content-center icon-circle"></i>
                             <div>
                                 <span class="d-block "> {{ orderTotalProducts[order.id] }}
                                 </span>
@@ -117,16 +116,7 @@ function openModalProducts(orderId: number) {
     }
 }
 
-.icon-text-cell {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
 .icon-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 30px;
     height: 30px;
     border-radius: 50%;

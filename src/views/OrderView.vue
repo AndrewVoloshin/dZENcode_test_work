@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import OrderTable from '../components/OrderTable.vue'
+import OrderTable from '../components/OrdersTable.vue'
+import OrderProductsTable from '../components/OrderProductsTable.vue'
+
 
 </script>
 
 <template>
   <div class="order-container">
     <h2>Orders</h2>
-    <OrderTable />
+    <div class="d-flex gap-3">
+      <OrderTable />
+      <OrderProductsTable />
+    </div>
+
   </div>
+
 </template>
 
 
